@@ -9,6 +9,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
         #endif
         
         #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-journal-ui-test") {
+            setupJournalUITests()
+        }
         let loggerLevel = XLog.Level.debug
         #else
         let loggerLevel = XLog.Level.info

@@ -15,6 +15,7 @@ class AudioRecorder: NSObject, ObservableObject {
     @Published var recordedTime: Int = 0
     @Published var voiceFile: URL?
     @Published var samples: [Float] = []
+    @Published var recordingError: String?
     
     var didFinishCallback: (() -> Void)?
     var didCompleteCallback: (() -> Void)?
@@ -58,6 +59,11 @@ class AudioRecorder: NSObject, ObservableObject {
             return
         }
         self.isTerminating = false
+        recordingError = nil
+        samples = []
+        recordedTime = 0
+        isCompleted = false
+        voiceFile = nil
         requestPermissionAndStartRecording()
     }
     
@@ -76,8 +82,8 @@ class AudioRecorder: NSObject, ObservableObject {
     
     func terminate() {
         XLog.debug("terminating recording", source: "Audio")
-        guard isRecording else { return }
         self.isTerminating = true
+        guard isRecording else { return }
         stopRecording()
         recorder.deleteRecording()
     }
@@ -104,8 +110,9 @@ class AudioRecorder: NSObject, ObservableObject {
             try session.setCategory(.playAndRecord, mode: .default, options: .duckOthers)
             #endif
             try session.setActive(true)
-            session.requestRecordPermission() { [unowned self] allowed in
+            session.requestRecordPermission() { [weak self] allowed in
                 DispatchQueue.main.async {
+                    guard let self, !self.isTerminating else { return }
                     #if os(iOS)
                     AppState.shared.micPermission = AVAudioSession.sharedInstance().recordPermission
                     #else
@@ -117,24 +124,28 @@ class AudioRecorder: NSObject, ObservableObject {
                 }
             }
         } catch {
+            recordingError = error.localizedDescription
             XLog.error(error)
         }
     }
     
     private func startMonitoring() {
-        timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { [weak self] timer in
+            guard let self else { timer.invalidate(); return }
             self.recordedTime = Int(self.recorder.currentTime)
             
             #if os(iOS)
             self.recorder.updateMeters()
             let linear = 1 - pow(10, self.recorder.averagePower(forChannel: 0) / 20)
             self.samples += [linear, linear]
+            if self.samples.count > 512 { self.samples.removeFirst(self.samples.count - 512) }
             #endif
         })
     }
     
     private func stopMonitoring() {
         timer?.invalidate()
+        timer = nil
     }
     
     private func record() {
@@ -153,10 +164,13 @@ class AudioRecorder: NSObject, ObservableObject {
             recorder.delegate = self
             recorder.isMeteringEnabled = true
             recorder.prepareToRecord()
-            recorder.record()
+            guard recorder.record() else {
+                throw NSError(domain: "ALog.Recording", code: 1, userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("Unable to start recording.", comment: "Recorder error")])
+            }
             isRecording = true
             startMonitoring()
         } catch {
+            recordingError = error.localizedDescription
             XLog.error("Failed to start audio engine: \(error.localizedDescription)")
         }
     }
@@ -186,6 +200,7 @@ extension AudioRecorder: AVAudioRecorderDelegate {
     
     func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
         if let error {
+            recordingError = error.localizedDescription
             voiceFile = nil
             XLog.error("audio recorder encode error: \(error.localizedDescription)", source: "Audio")
         }

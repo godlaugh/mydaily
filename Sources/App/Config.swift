@@ -30,6 +30,7 @@ class Config: ObservableObject {
     @AppStorage("trans_provider") var transProvider = TranscriptionProvider.apple
     @AppStorage("trans_lang") var transLang = TranscriptionLang.auto
     @AppStorage("trans_model") var transModel = TranscriptionModel.whisper_1
+    @AppStorage("local_transcription_model") var localTranscriptionModel = LocalTranscriptionModel.senseVoiceSmall
     
     @AppStorage("sum_enabled") var sumEnabled = false
     

@@ -285,4 +285,86 @@ public enum MyLocalizedKey: String {
   case settings_sum_model = "settings_sum_model"
   /**设置 - 转写 - 模型*/
   case settings_trans_model = "settings_trans_model"
+  /**转录模型管理*/
+  case transcription_models = "transcription_models"
+  /**转录模型 - 本机*/
+  case trans_model_on_device = "trans_model_on_device"
+  /**转录模型 - 系统*/
+  case trans_model_system = "trans_model_system"
+  /**转录模型 - 云端*/
+  case trans_model_cloud = "trans_model_cloud"
+  /**转录模型 - 已下载*/
+  case trans_model_downloaded = "trans_model_downloaded"
+  /**转录模型 - 需要下载*/
+  case trans_model_download_required = "trans_model_download_required"
+  /**转录模型 - 下载中*/
+  case trans_model_downloading = "trans_model_downloading"
+  /**转录模型 - 连接中*/
+  case trans_model_connecting = "trans_model_connecting"
+  /**转录模型 - 校验中*/
+  case trans_model_verifying = "trans_model_verifying"
+  /**转录模型 - 下载字节数*/
+  case trans_model_download_bytes = "trans_model_download_bytes"
+  /**转录模型 - 下载速率*/
+  case trans_model_download_rate = "trans_model_download_rate"
+  /**转录模型 - 下载来源*/
+  case trans_model_download_source = "trans_model_download_source"
+  /**转录模型 - 前台下载提示*/
+  case trans_model_download_foreground = "trans_model_download_foreground"
+  /**转录模型 - 下载按钮*/
+  case trans_model_download = "trans_model_download"
+  /**转录模型 - 取消下载*/
+  case trans_model_cancel_download = "trans_model_cancel_download"
+  /**转录模型 - 删除按钮*/
+  case trans_model_delete = "trans_model_delete"
+  /**转录模型 - 删除确认标题*/
+  case trans_model_delete_title = "trans_model_delete_title"
+  /**转录模型 - 删除确认*/
+  case trans_model_delete_message = "trans_model_delete_message"
+  /**转录模型 - 删除当前模型确认*/
+  case trans_model_delete_selected_message = "trans_model_delete_selected_message"
+  /**转录模型 - 正在删除*/
+  case trans_model_deleting = "trans_model_deleting"
+  /**转录模型 - 正在使用*/
+  case trans_model_in_use = "trans_model_in_use"
+  /**转录模型 - SenseVoice语言*/
+  case trans_model_sensevoice_languages = "trans_model_sensevoice_languages"
+  /**转录模型 - 本机说明*/
+  case trans_model_local_description = "trans_model_local_description"
+  /**转录模型 - INT8规格*/
+  case trans_model_int8_specification = "trans_model_int8_specification"
+  /**转录模型 - FP32规格*/
+  case trans_model_fp32_specification = "trans_model_fp32_specification"
+  /**转录模型 - 本机隐私说明*/
+  case trans_model_local_privacy = "trans_model_local_privacy"
+  /**转录模型 - Apple说明*/
+  case trans_model_apple_description = "trans_model_apple_description"
+  /**转录模型 - 云端说明*/
+  case trans_model_cloud_description = "trans_model_cloud_description"
+  /**转录模型 - 服务器*/
+  case trans_model_server = "trans_model_server"
+  /**本地转录错误 - 缺失文件*/
+  case error_local_model_missing_file = "error_local_model_missing_file"
+  /**本地转录错误 - 加载失败*/
+  case error_local_model_load = "error_local_model_load"
+  /**本地转录错误 - 音频格式*/
+  case error_local_model_audio_format = "error_local_model_audio_format"
+  /**本地转录错误 - 读取录音*/
+  case error_local_model_audio_read = "error_local_model_audio_read"
+  /**本地转录错误 - 推理失败*/
+  case error_local_model_process = "error_local_model_process"
+  /**本地转录错误 - 不支持语言*/
+  case error_local_model_language = "error_local_model_language"
+  /**模型安装错误 - 未下载*/
+  case error_model_not_installed = "error_model_not_installed"
+  /**模型安装错误 - 使用中*/
+  case error_model_in_use = "error_model_in_use"
+  /**模型安装错误 - 响应无效*/
+  case error_model_download_response = "error_model_download_response"
+  /**模型安装错误 - 文件大小*/
+  case error_model_download_size = "error_model_download_size"
+  /**模型安装错误 - 校验失败*/
+  case error_model_download_checksum = "error_model_download_checksum"
+  /**模型安装错误 - 安装损坏*/
+  case error_model_installation = "error_model_installation"
 }

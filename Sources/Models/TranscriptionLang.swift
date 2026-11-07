@@ -33,6 +33,17 @@ enum TranscriptionLang: String, CaseIterable {
         default: return ""
         }
     }
+
+    /// SenseVoice distinguishes Cantonese from Mandarin in its language token.
+    var senseVoiceLanguage: String {
+        switch self {
+        case .auto: return "auto"
+        case .en: return "en"
+        case .zh_hans: return "zh"
+        case .zh_hant_hk: return "yue"
+        case .ja: return "ja"
+        }
+    }
     
     var localeIdentifier: String? {
         switch self {

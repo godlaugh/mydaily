@@ -96,7 +96,7 @@ multi_delete_alert,批量删除确认,Are you sure you want to delete %d selecte
 "settings_trans","设置 - 转写","Transcription",语音转写
 "settings_trans_lang","设置 - 转写 - 语言","Main Language",转写语言
 "settings_trans_provider","设置 - 转写 - 服务","Service",服务
-"settings_trans_privacy_warning","设置 - 转写 - 隐私警告","As the transcription services require internet connection, please don't record any sensitive information.",由于语音转写服务需要互联网连接，请不要录入敏感信息
+"settings_trans_privacy_warning","设置 - 转写 - 隐私警告","Apple or cloud transcription may send audio to the selected service. SenseVoice processes audio on this device.","Apple 或云端转写可能将录音发送给所选服务。SenseVoice 在本机处理录音。"
 "settings_sum","设置 - 总结","Summarization",总结
 "settings_sum_provider","设置 - 总结 - 服务","Service",服务
 "settings_sum_ai_model","设置 - 总结 - AI 模型","AI Model",AI 模型
@@ -124,7 +124,7 @@ multi_delete_alert,批量删除确认,Are you sure you want to delete %d selecte
 # 转写 #
 "trans_provider_apple","转写 - Apple","System",系统
 "trans_provider_openai","转写 - OpenAI (Whisper) ","OpenAI",OpenAI
-"trans_provider_apple_notice","转写 - Apple - 提示","Less accurate and limited to 1 minute audio duration.",准确度较低且仅限于1分钟的音频时长。
+"trans_provider_apple_notice","转写 - Apple - 提示","Language availability and network use depend on your device and Apple speech recognition support.","可用语言和联网需求取决于设备及 Apple 语音识别支持。"
 "transcribing","转写 - 正在转写 ","Transcribing ...",正在转写 ...
 # 转写语言 #
 "trans_lang_auto","转写 - 语言 - 自动检测","Auto-Detect",自动检测
@@ -170,3 +170,45 @@ I will ask you to:
 "watch_recents_empty","Watch - 没有录音","No Recordings",无录音
 "settings_sum_model","设置 - 总结 - 模型","Summarization Model","总结模型"
 "settings_trans_model","设置 - 转写 - 模型","Transcription Model","转录模型"
+# Transcription Models #
+transcription_models,转录模型管理,Transcription Models,转录模型
+trans_model_on_device,转录模型 - 本机,On Device,本机转录
+trans_model_system,转录模型 - 系统,System,系统服务
+trans_model_cloud,转录模型 - 云端,Cloud,云端转录
+trans_model_downloaded,转录模型 - 已下载,Downloaded,已下载
+trans_model_download_required,转录模型 - 需要下载,Download required,需要下载
+trans_model_downloading,转录模型 - 下载中,Downloading…,正在下载…
+trans_model_connecting,转录模型 - 连接中,Connecting…,正在连接…
+trans_model_verifying,转录模型 - 校验中,Verifying model…,正在校验模型…
+trans_model_download_bytes,转录模型 - 下载字节数,%@ of %@,%@ / %@
+trans_model_download_rate,转录模型 - 下载速率,%@/s,%@/秒
+trans_model_download_source,转录模型 - 下载来源,Source: %@,来源：%@
+trans_model_download_foreground,转录模型 - 前台下载提示,Keep ALog in the foreground until the download finishes.,下载完成前，请保持 ALog 在前台。
+trans_model_download,转录模型 - 下载按钮,Download model,下载模型
+trans_model_cancel_download,转录模型 - 取消下载,Cancel download,取消下载
+trans_model_delete,转录模型 - 删除按钮,Delete model,删除模型
+trans_model_delete_title,转录模型 - 删除确认标题,Delete %@?,删除 %@？
+trans_model_delete_message,转录模型 - 删除确认,You can download this model again whenever you need it.,以后可以重新下载此模型。
+trans_model_delete_selected_message,转录模型 - 删除当前模型确认,Transcription will switch to Apple Speech. You can download SenseVoice again later.,转录服务将切换到 Apple Speech。以后可以重新下载 SenseVoice。
+trans_model_deleting,转录模型 - 正在删除,Deleting model…,正在删除模型…
+trans_model_in_use,转录模型 - 正在使用,The model can be deleted after transcription finishes.,转录完成后可删除此模型。
+trans_model_sensevoice_languages,转录模型 - SenseVoice语言,"Chinese, Cantonese, English, Japanese and Korean",普通话、粤语、英语、日语和韩语
+trans_model_local_description,转录模型 - 本机说明,"After downloading, select a model to transcribe offline on this device. Audio stays on your device.",下载后点选模型，即可在本机离线转录，录音无需上传。
+trans_model_int8_specification,转录模型 - INT8规格,INT8 quantized · %@,INT8 量化 · %@
+trans_model_fp32_specification,转录模型 - FP32规格,FP32 floating point · %@,FP32 浮点 · %@
+trans_model_local_privacy,转录模型 - 本机隐私说明,SenseVoice transcribes on this device without uploading audio.,SenseVoice 在本机转录，无需上传录音。
+trans_model_apple_description,转录模型 - Apple说明,Use the speech recognition service provided by your device.,使用设备提供的语音识别服务。
+trans_model_cloud_description,转录模型 - 云端说明,Requires an internet connection. Audio is sent to your selected server for transcription.,需要互联网连接。录音将发送到所选服务器进行转录。
+trans_model_server,转录模型 - 服务器,Server: %@,服务器：%@
+error_local_model_missing_file,本地转录错误 - 缺失文件,The local transcription model file is missing or empty: %@. Please download the model again.,本地转录模型文件缺失或为空：%@。请重新下载模型。
+error_local_model_load,本地转录错误 - 加载失败,The local transcription model could not be loaded. Please download the model again.,无法加载本地转录模型，请重新下载模型。
+error_local_model_audio_format,本地转录错误 - 音频格式,This recording cannot be converted to audio supported by the local transcription model.,无法将此录音转换为本地转录模型支持的音频格式。
+error_local_model_audio_read,本地转录错误 - 读取录音,The recording could not be read for local transcription.,无法读取此录音以进行本地转录。
+error_local_model_process,本地转录错误 - 推理失败,The local transcription model could not process this recording.,本地转录模型无法处理此录音。
+error_local_model_language,本地转录错误 - 不支持语言,The local transcription model does not support the language: %@.,本地转录模型不支持此语言：%@。
+error_model_not_installed,模型安装错误 - 未下载,Download the transcription model before using it.,请先下载转录模型。
+error_model_in_use,模型安装错误 - 使用中,The model is being used for transcription. Try again when transcription finishes.,模型正在转录，请在转录完成后重试。
+error_model_download_response,模型安装错误 - 响应无效,The model server returned an invalid response. Please try again.,模型服务器返回了无效响应，请重试。
+error_model_download_size,模型安装错误 - 文件大小,The downloaded %@ has an unexpected size. Please try again.,下载的 %@ 文件大小不正确，请重试。
+error_model_download_checksum,模型安装错误 - 校验失败,The downloaded %@ failed its integrity check. Please try again.,下载的 %@ 未通过完整性校验，请重试。
+error_model_installation,模型安装错误 - 安装损坏,The transcription model is incomplete or damaged. Please download it again.,转录模型不完整或已损坏，请重新下载。

@@ -263,7 +263,7 @@
 "settings_trans_provider" = "服务";
 
 /*设置 - 转写 - 隐私警告*/
-"settings_trans_privacy_warning" = "由于语音转写服务需要互联网连接，请不要录入敏感信息";
+"settings_trans_privacy_warning" = "Apple 或云端转写可能将录音发送给所选服务。SenseVoice 在本机处理录音。";
 
 /*设置 - 总结*/
 "settings_sum" = "总结";
@@ -332,7 +332,7 @@
 "trans_provider_openai" = "OpenAI";
 
 /*转写 - Apple - 提示*/
-"trans_provider_apple_notice" = "准确度较低且仅限于1分钟的音频时长。";
+"trans_provider_apple_notice" = "可用语言和联网需求取决于设备及 Apple 语音识别支持。";
 
 /*转写 - 正在转写*/
 "transcribing" = "正在转写 ...";
@@ -428,3 +428,126 @@
 
 /*设置 - 转写 - 模型*/
 "settings_trans_model" = "转录模型";
+
+/*转录模型管理*/
+"transcription_models" = "转录模型";
+
+/*转录模型 - 本机*/
+"trans_model_on_device" = "本机转录";
+
+/*转录模型 - 系统*/
+"trans_model_system" = "系统服务";
+
+/*转录模型 - 云端*/
+"trans_model_cloud" = "云端转录";
+
+/*转录模型 - 已下载*/
+"trans_model_downloaded" = "已下载";
+
+/*转录模型 - 需要下载*/
+"trans_model_download_required" = "需要下载";
+
+/*转录模型 - 下载中*/
+"trans_model_downloading" = "正在下载…";
+
+/*转录模型 - 连接中*/
+"trans_model_connecting" = "正在连接…";
+
+/*转录模型 - 校验中*/
+"trans_model_verifying" = "正在校验模型…";
+
+/*转录模型 - 下载字节数*/
+"trans_model_download_bytes" = "%@ / %@";
+
+/*转录模型 - 下载速率*/
+"trans_model_download_rate" = "%@/秒";
+
+/*转录模型 - 下载来源*/
+"trans_model_download_source" = "来源：%@";
+
+/*转录模型 - 前台下载提示*/
+"trans_model_download_foreground" = "下载完成前，请保持 ALog 在前台。";
+
+/*转录模型 - 下载按钮*/
+"trans_model_download" = "下载模型";
+
+/*转录模型 - 取消下载*/
+"trans_model_cancel_download" = "取消下载";
+
+/*转录模型 - 删除按钮*/
+"trans_model_delete" = "删除模型";
+
+/*转录模型 - 删除确认标题*/
+"trans_model_delete_title" = "删除 %@？";
+
+/*转录模型 - 删除确认*/
+"trans_model_delete_message" = "以后可以重新下载此模型。";
+
+/*转录模型 - 删除当前模型确认*/
+"trans_model_delete_selected_message" = "转录服务将切换到 Apple Speech。以后可以重新下载 SenseVoice。";
+
+/*转录模型 - 正在删除*/
+"trans_model_deleting" = "正在删除模型…";
+
+/*转录模型 - 正在使用*/
+"trans_model_in_use" = "转录完成后可删除此模型。";
+
+/*转录模型 - SenseVoice语言*/
+"trans_model_sensevoice_languages" = "普通话、粤语、英语、日语和韩语";
+
+/*转录模型 - 本机说明*/
+"trans_model_local_description" = "下载后点选模型，即可在本机离线转录，录音无需上传。";
+
+/*转录模型 - INT8规格*/
+"trans_model_int8_specification" = "INT8 量化 · %@";
+
+/*转录模型 - FP32规格*/
+"trans_model_fp32_specification" = "FP32 浮点 · %@";
+
+/*转录模型 - 本机隐私说明*/
+"trans_model_local_privacy" = "SenseVoice 在本机转录，无需上传录音。";
+
+/*转录模型 - Apple说明*/
+"trans_model_apple_description" = "使用设备提供的语音识别服务。";
+
+/*转录模型 - 云端说明*/
+"trans_model_cloud_description" = "需要互联网连接。录音将发送到所选服务器进行转录。";
+
+/*转录模型 - 服务器*/
+"trans_model_server" = "服务器：%@";
+
+/*本地转录错误 - 缺失文件*/
+"error_local_model_missing_file" = "本地转录模型文件缺失或为空：%@。请重新下载模型。";
+
+/*本地转录错误 - 加载失败*/
+"error_local_model_load" = "无法加载本地转录模型，请重新下载模型。";
+
+/*本地转录错误 - 音频格式*/
+"error_local_model_audio_format" = "无法将此录音转换为本地转录模型支持的音频格式。";
+
+/*本地转录错误 - 读取录音*/
+"error_local_model_audio_read" = "无法读取此录音以进行本地转录。";
+
+/*本地转录错误 - 推理失败*/
+"error_local_model_process" = "本地转录模型无法处理此录音。";
+
+/*本地转录错误 - 不支持语言*/
+"error_local_model_language" = "本地转录模型不支持此语言：%@。";
+
+/*模型安装错误 - 未下载*/
+"error_model_not_installed" = "请先下载转录模型。";
+
+/*模型安装错误 - 使用中*/
+"error_model_in_use" = "模型正在转录，请在转录完成后重试。";
+
+/*模型安装错误 - 响应无效*/
+"error_model_download_response" = "模型服务器返回了无效响应，请重试。";
+
+/*模型安装错误 - 文件大小*/
+"error_model_download_size" = "下载的 %@ 文件大小不正确，请重试。";
+
+/*模型安装错误 - 校验失败*/
+"error_model_download_checksum" = "下载的 %@ 未通过完整性校验，请重试。";
+
+/*模型安装错误 - 安装损坏*/
+"error_model_installation" = "转录模型不完整或已损坏，请重新下载。";

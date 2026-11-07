@@ -13,13 +13,17 @@ struct ALogApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
-                .tint(Color.app_accent)
+                .tint(JournalTheme.accent)
                 .environmentObject(container)
                 .environmentObject(appState)
                 .environmentObject(config)
                 .environmentObject(conn)
                 .environment(\.managedObjectContext, container.context)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(config.darkMode == .auto ? nil : config.darkMode == .dark ? .dark : .light)
+                .task(id: [config.transProvider.rawValue, config.transLang.rawValue,
+                           config.localTranscriptionModel.rawValue]) {
+                    await Transcription.shared.prepareSelectedModel()
+                }
                 .onOpenURL { url in
                     appState.openURL(url)
                 }

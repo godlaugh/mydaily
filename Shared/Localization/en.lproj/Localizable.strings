@@ -263,7 +263,7 @@
 "settings_trans_provider" = "Service";
 
 /*设置 - 转写 - 隐私警告*/
-"settings_trans_privacy_warning" = "As the transcription services require internet connection, please don't record any sensitive information.";
+"settings_trans_privacy_warning" = "Apple or cloud transcription may send audio to the selected service. SenseVoice processes audio on this device.";
 
 /*设置 - 总结*/
 "settings_sum" = "Summarization";
@@ -332,7 +332,7 @@
 "trans_provider_openai" = "OpenAI";
 
 /*转写 - Apple - 提示*/
-"trans_provider_apple_notice" = "Less accurate and limited to 1 minute audio duration.";
+"trans_provider_apple_notice" = "Language availability and network use depend on your device and Apple speech recognition support.";
 
 /*转写 - 正在转写*/
 "transcribing" = "Transcribing ...";
@@ -428,3 +428,126 @@ I will ask you to:
 
 /*设置 - 转写 - 模型*/
 "settings_trans_model" = "Transcription Model";
+
+/*转录模型管理*/
+"transcription_models" = "Transcription Models";
+
+/*转录模型 - 本机*/
+"trans_model_on_device" = "On Device";
+
+/*转录模型 - 系统*/
+"trans_model_system" = "System";
+
+/*转录模型 - 云端*/
+"trans_model_cloud" = "Cloud";
+
+/*转录模型 - 已下载*/
+"trans_model_downloaded" = "Downloaded";
+
+/*转录模型 - 需要下载*/
+"trans_model_download_required" = "Download required";
+
+/*转录模型 - 下载中*/
+"trans_model_downloading" = "Downloading…";
+
+/*转录模型 - 连接中*/
+"trans_model_connecting" = "Connecting…";
+
+/*转录模型 - 校验中*/
+"trans_model_verifying" = "Verifying model…";
+
+/*转录模型 - 下载字节数*/
+"trans_model_download_bytes" = "%@ of %@";
+
+/*转录模型 - 下载速率*/
+"trans_model_download_rate" = "%@/s";
+
+/*转录模型 - 下载来源*/
+"trans_model_download_source" = "Source: %@";
+
+/*转录模型 - 前台下载提示*/
+"trans_model_download_foreground" = "Keep ALog in the foreground until the download finishes.";
+
+/*转录模型 - 下载按钮*/
+"trans_model_download" = "Download model";
+
+/*转录模型 - 取消下载*/
+"trans_model_cancel_download" = "Cancel download";
+
+/*转录模型 - 删除按钮*/
+"trans_model_delete" = "Delete model";
+
+/*转录模型 - 删除确认标题*/
+"trans_model_delete_title" = "Delete %@?";
+
+/*转录模型 - 删除确认*/
+"trans_model_delete_message" = "You can download this model again whenever you need it.";
+
+/*转录模型 - 删除当前模型确认*/
+"trans_model_delete_selected_message" = "Transcription will switch to Apple Speech. You can download SenseVoice again later.";
+
+/*转录模型 - 正在删除*/
+"trans_model_deleting" = "Deleting model…";
+
+/*转录模型 - 正在使用*/
+"trans_model_in_use" = "The model can be deleted after transcription finishes.";
+
+/*转录模型 - SenseVoice语言*/
+"trans_model_sensevoice_languages" = "Chinese, Cantonese, English, Japanese and Korean";
+
+/*转录模型 - 本机说明*/
+"trans_model_local_description" = "After downloading, select a model to transcribe offline on this device. Audio stays on your device.";
+
+/*转录模型 - INT8规格*/
+"trans_model_int8_specification" = "INT8 quantized · %@";
+
+/*转录模型 - FP32规格*/
+"trans_model_fp32_specification" = "FP32 floating point · %@";
+
+/*转录模型 - 本机隐私说明*/
+"trans_model_local_privacy" = "SenseVoice transcribes on this device without uploading audio.";
+
+/*转录模型 - Apple说明*/
+"trans_model_apple_description" = "Use the speech recognition service provided by your device.";
+
+/*转录模型 - 云端说明*/
+"trans_model_cloud_description" = "Requires an internet connection. Audio is sent to your selected server for transcription.";
+
+/*转录模型 - 服务器*/
+"trans_model_server" = "Server: %@";
+
+/*本地转录错误 - 缺失文件*/
+"error_local_model_missing_file" = "The local transcription model file is missing or empty: %@. Please download the model again.";
+
+/*本地转录错误 - 加载失败*/
+"error_local_model_load" = "The local transcription model could not be loaded. Please download the model again.";
+
+/*本地转录错误 - 音频格式*/
+"error_local_model_audio_format" = "This recording cannot be converted to audio supported by the local transcription model.";
+
+/*本地转录错误 - 读取录音*/
+"error_local_model_audio_read" = "The recording could not be read for local transcription.";
+
+/*本地转录错误 - 推理失败*/
+"error_local_model_process" = "The local transcription model could not process this recording.";
+
+/*本地转录错误 - 不支持语言*/
+"error_local_model_language" = "The local transcription model does not support the language: %@.";
+
+/*模型安装错误 - 未下载*/
+"error_model_not_installed" = "Download the transcription model before using it.";
+
+/*模型安装错误 - 使用中*/
+"error_model_in_use" = "The model is being used for transcription. Try again when transcription finishes.";
+
+/*模型安装错误 - 响应无效*/
+"error_model_download_response" = "The model server returned an invalid response. Please try again.";
+
+/*模型安装错误 - 文件大小*/
+"error_model_download_size" = "The downloaded %@ has an unexpected size. Please try again.";
+
+/*模型安装错误 - 校验失败*/
+"error_model_download_checksum" = "The downloaded %@ failed its integrity check. Please try again.";
+
+/*模型安装错误 - 安装损坏*/
+"error_model_installation" = "The transcription model is incomplete or damaged. Please download it again.";

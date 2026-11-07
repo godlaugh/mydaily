@@ -63,7 +63,7 @@ extension MemoEntity {
     }
     
     static func newEntity(moc: NSManagedObjectContext) -> MemoEntity {
-        let memo = MemoEntity(context: moc)
+        let memo = NSEntityDescription.insertNewObject(forEntityName: "MemoEntity", into: moc) as! MemoEntity
         memo.id = UUID().uuidString.lowercased()
         memo.day = Int32(DateHelper.todayIdentifier())
         memo.timezone = TimeZone.current.identifier

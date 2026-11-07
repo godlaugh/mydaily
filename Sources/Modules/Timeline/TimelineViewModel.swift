@@ -27,6 +27,7 @@ class TimelineViewModel: ObservableObject {
     @Published var showReviewDialog = false
     
     @Published var isHoldingToRecord = false
+    @Published var recordingError: String?
     
     @Published var isMultiSelectMode = false
     @Published var selectedMemos = Set<MemoEntity>()
@@ -58,19 +59,24 @@ class TimelineViewModel: ObservableObject {
     }
     
     func transcribe(_ memo: MemoEntity) {
-        guard memo.file != nil else { return }
+        guard memo.file != nil, !memo.isDeleted, !transcribingMemos.contains(memo) else { return }
         failedMemos[memo] = nil
         transcribingMemos.insert(memo)
         Transcription.shared.transcribe(memo) { [weak self] result in
             self?.transcribingMemos.remove(memo)
+            guard !memo.isDeleted, memo.managedObjectContext != nil else { return }
             switch result {
             case .success(let text):
-                if memo.content != text {
-                    memo.content = text
+                // Silence is a completed transcription, but must not erase existing edits.
+                let content = text.isEmpty ? (memo.content ?? "") : text
+                if memo.content != content || !memo.transcribed {
+                    memo.content = content
                     memo.transcribed = true
                     try? DataContainer.shared.context.save()
-                    self?.transCount += 1
-                    self?.requestReview()
+                    if !text.isEmpty {
+                        self?.transCount += 1
+                        self?.requestReview()
+                    }
                 }
             case .failure(let error):
                 self?.failedMemos[memo] = error
@@ -99,12 +105,15 @@ class TimelineViewModel: ObservableObject {
     
     
     func beginHoldToRecord() {
+        recordingError = nil
+        recorder.didFinishCallback = { [weak self] in self?.isHoldingToRecord = false }
         recorder.startRecording()
         isHoldingToRecord = true
     }
     
     func endHoldToRecord() {
         isHoldingToRecord = false
+        guard recorder.isRecording else { recorder.terminate(); return }
         recorder.didCompleteCallback = { [weak self] in
             guard let self = self, let url = self.recorder.voiceFile else {
                 return
@@ -120,15 +129,16 @@ class TimelineViewModel: ObservableObject {
     }
     
     private func saveVoice(_ voiceURL: URL) {
-        guard let voiceURL = recorder.voiceFile else { return }
-        let moc = DataContainer.shared.context
-        let memo = MemoEntity.newEntity(moc: moc)
-        memo.file = voiceURL.lastPathComponent
-        do {
-            try moc.save()
-            _ = try FileHelper.moveAudioFile(voiceURL)
-        } catch {
-            XLog.error(error, source: "recording")
+        Task { @MainActor in
+            do {
+                let duration = await FileHelper.getAudioDuration(voiceURL)
+                let destination = try FileHelper.moveAudioFile(voiceURL)
+                try JournalStore.add(content: "", file: destination.lastPathComponent,
+                                     duration: duration, in: DataContainer.shared.context)
+            } catch {
+                recordingError = error.localizedDescription
+                XLog.error(error, source: "recording")
+            }
         }
     }
     

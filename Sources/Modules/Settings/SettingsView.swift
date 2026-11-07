@@ -51,10 +51,11 @@ struct SettingsView: View {
             }
             .navigationTitle(L(.settings_title))
             .navigationBarTitleDisplayMode(.inline)
-            .onChange(of: config.transEnabled) { newValue in
-                if newValue && transWarningDisplayed == false {
-                    showTransWarning = true
-                }
+            .onChange(of: config.transEnabled) { _ in
+                showTranscriptionPrivacyNoticeIfNeeded()
+            }
+            .onChange(of: config.transProvider) { _ in
+                showTranscriptionPrivacyNoticeIfNeeded()
             }
             .onChange(of: config.darkMode) { newValue in
                 dismiss()
@@ -81,6 +82,9 @@ struct SettingsView: View {
                 }
             } label: {
                 Text(L(.settings_app_language))
+            }
+            Picker(JournalText.string("appearance"), selection: $config.darkMode) {
+                ForEach(DarkMode.allCases, id: \.self) { mode in Text(mode.displayName).tag(mode) }
             }
             
             MyToggle(isOn: $config.autoSave) {
@@ -142,6 +146,13 @@ struct SettingsView: View {
             MyToggle(isOn: $config.transEnabled) {
                 Text(L(.enable))
             }
+
+            NavigationLink {
+                TranscriptionModelsView()
+            } label: {
+                LabeledContent(L(.transcription_models), value: selectedTranscriptionModelName)
+            }
+            .accessibilityIdentifier("transcription_models_settings")
             
             if config.transEnabled {
                 Picker(selection: $config.transLang) {
@@ -151,38 +162,16 @@ struct SettingsView: View {
                 } label: {
                     Text(L(.settings_trans_lang))
                 }
-                
-                Picker(selection: $config.transProvider) {
-                    ForEach(TranscriptionProvider.allCases, id: \.self) { item in
-                        Text(item.displayName)
-                    }
-                } label: {
-                    Text(L(.settings_trans_provider))
-                }
-                
-                if config.transProvider == .openai {
-                    Picker(selection: $config.transModel) {
-                        if config.serverType == .app {
-                            ForEach(TranscriptionModel.defaultServerModels, id: \.self) { item in
-                                Text(item.displayName)
-                                    .tag(item)
-                            }
-                        } else if config.serverType == .custom {
-                            ForEach(TranscriptionModel.customServerModels, id: \.self) { item in
-                                Text(item.displayName)
-                                    .tag(item)
-                            }
-                        }
-                    } label: {
-                        Text(L(.settings_trans_model))
-                    }
-                }
             }
         } header: {
             Text(L(.settings_trans))
         } footer: {
             if config.transEnabled && config.transProvider == .apple {
                 Text(L(.trans_provider_apple_notice))
+            } else if config.transEnabled && config.transProvider == .senseVoice {
+                Text(L(.trans_model_local_privacy))
+            } else if config.transEnabled && config.transProvider == .openai {
+                Text(L(.trans_model_cloud_description))
             } else {
                 Text(" ")
             }
@@ -190,6 +179,21 @@ struct SettingsView: View {
         .alert(isPresented: $showTransWarning) {
             Alert(title: Text(L(.settings_trans_privacy_warning)), dismissButton: nil)
         }
+    }
+
+    private var selectedTranscriptionModelName: String {
+        switch config.transProvider {
+        case .senseVoice: return config.localTranscriptionModel.displayName
+        case .apple: return "Apple Speech"
+        case .openai: return config.transModel.displayName
+        }
+    }
+
+    private func showTranscriptionPrivacyNoticeIfNeeded() {
+        guard config.transEnabled,
+              config.transProvider != .senseVoice,
+              !transWarningDisplayed else { return }
+        showTransWarning = true
     }
     
     @ViewBuilder

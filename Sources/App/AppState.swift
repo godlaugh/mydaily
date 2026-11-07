@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 import AVFoundation
 
 import XLog
@@ -39,6 +40,7 @@ class AppState: ObservableObject {
     @Published var activeSheet: ActiveSheet?
     @Published var activeTab: Int = 0
     @Published var showRecording = false
+    @Published var recordingParentID: NSManagedObjectID?
     
     private let PREMIUM_KEY = "is_premium"
     @Published var isPremium: Bool = false {
@@ -56,13 +58,14 @@ class AppState: ObservableObject {
         micPermission = audioSession.recordPermission
     }
     
-    func startRecording() {
+    func startRecording(parent: MemoEntity? = nil) {
         guard showRecording == false else { return }
         guard micPermission != .denied else {
             activeSheet = .micPermission
             return
         }
         activeSheet = nil
+        recordingParentID = parent?.objectID
         activeTab = 0
         AudioPlayer.shared.stop()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -85,7 +88,7 @@ class AppState: ObservableObject {
         if case .summarize = activeSheet { return }
         let today = DateHelper.identifier(from: Date().realDate)
         activeSheet = nil
-        activeTab = 0
+        activeTab = 1
         activeSheet = .summarize(SummaryItem.day(today))
     }
     
@@ -124,6 +127,7 @@ class AppState: ObservableObject {
             return false
         }
         activeSheet = nil
+        recordingParentID = nil
         activeTab = 0
         AudioPlayer.shared.stop()
         return true

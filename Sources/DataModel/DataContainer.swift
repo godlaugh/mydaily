@@ -18,10 +18,21 @@ class DataContainer: ObservableObject {
     
     init(inMemory: Bool = false) {
         persistentContainer = NSPersistentContainer(name: "DataModel")
+        persistentContainer.persistentStoreDescriptions.forEach {
+            $0.shouldMigrateStoreAutomatically = true
+            $0.shouldInferMappingModelAutomatically = true
+        }
         
         if inMemory {
             persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
+        #if DEBUG
+        if !inMemory && ProcessInfo.processInfo.arguments.contains("-journal-ui-test") {
+            // UI tests use an isolated store; they never reset a person's diary.
+            persistentContainer.persistentStoreDescriptions.first?.url =
+                NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("JournalUITests.sqlite")
+        }
+        #endif
         
         persistentContainer.loadPersistentStores { _, err in
             guard err == nil else {

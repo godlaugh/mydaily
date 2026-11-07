@@ -1,157 +1,73 @@
-//
-//  RecordingCompletedView.swift
-//  ALog
-//
-//  Created by Xin Du on 2023/07/14.
-//
-
 import SwiftUI
+import CoreData
 
 struct RecordingCompletedView: View {
-    @StateObject var vm: RecordingCompletedViewModel
-    @Environment(\.dismiss) var dismiss
-    @StateObject var player: AudioPlayer
-    
-    let editorMinHeight: CGFloat = 200.0
-    
-    @State private var showDeleteAlert = false
-    
-    init(voiceURL: URL) {
-        self._vm = StateObject(wrappedValue: RecordingCompletedViewModel(voicePath: voiceURL))
-        self._player = StateObject(wrappedValue: AudioPlayer(voiceURL))
-    }
-    
-    var body: some View {
-        ZStack {
-            VStack {
-                Form {
-                    Section {
-                        ZStack {
-                            if vm.isTranscribing {
-                                VStack(spacing: 15) {
-                                    Text(L(.transcribing))
-                                        .font(.headline)
-                                        .foregroundColor(.secondary)
-                                    ProgressView()
-                                }
-                                .frame(maxWidth: .infinity)
-                                .frame(height: editorMinHeight)
-                            } else {
-                                MyTextView(text: $vm.content, minHeight: editorMinHeight)
-                                    .disabled(vm.isTranscribing)
-                            }
-                        }
-                    } header: {
-                        Text(L(.memo))
-                    } footer: {
-                        VStack(spacing: 20) {
-                            playerView()
-                                .padding(.top, 20)
-                            
-                            if let err = vm.transcriptionError {
-                                Text(err)
-                                    .foregroundColor(.red)
-                                    .frame(maxWidth: .infinity)
-                                Button {
-                                    vm.transcriptionError = nil
-                                    vm.transcribe()
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "arrow.clockwise")
-                                        Text(L(.try_again))
-                                    }
-                                }
-                                .buttonStyle(TryAgainButtonStyle())
-                            }
-                        }
-                    }
-                }
-            }
-            
-            VStack {
-                Spacer()
-                saveButton()
-                
-            }
-            .padding(.horizontal, 30)
-        }
-        .onChange(of: vm.saved) { newValue in
-            dismiss()
-        }
-        .task {
-            if Config.shared.autoSave {
-                vm.save()
-                dismiss()
-            } else {
-                vm.transcribe()
-            }
-        }
-        .alert(isPresented: $showDeleteAlert) {
-            Alert(title: Text(L(.are_you_sure)), primaryButton: .destructive(Text(L(.delete))) {
-                vm.delete()
-                dismiss()
-            }, secondaryButton: .cancel())
-        }
-    }
-    
-    @ViewBuilder
-    private func playerView() -> some View {
-        VStack(spacing: 30) {
-            HStack {
-                Button {
-                    hideKeyboard()
-                    player.isPlaying ? player.stop() : player.play()
-                } label: {
-                    Image(systemName: player.isPlaying ? "stop.fill" : "play.fill")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white)
-                        .frame(width: 60, height: 60)
-                        .background(Color(uiColor: .tertiarySystemFill), ignoresSafeAreaEdges: .init())
-                        .clipShape(Circle())
-                }
-            }
-        }
-        .frame(maxWidth: .infinity)
-    }
-    
-    @ViewBuilder
-    private func saveButton() -> some View {
-        HStack(spacing: 20) {
-            FeedbackButton {
-                hideKeyboard()
-                withAnimation {
-                    vm.save()
-                }
-            } label: {
-                Text(L(.save).capitalized)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(PrimaryButtonStyle())
-            .disabled(!vm.canBeSaved)
-            
-            FeedbackButton(style: .heavy) {
-                hideKeyboard()
-                showDeleteAlert = true
-            } label: {
-                HStack {
-                    Image(systemName: "trash")
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(DestructiveButtonStyle())
-            .frame(width: 40, height: 40)
-        }
-        .padding(.bottom, 30)
-    }
-}
+    @StateObject private var vm: RecordingCompletedViewModel
+    @StateObject private var player: AudioPlayer
+    @Environment(\.dismiss) private var dismiss
+    @State private var discard = false
 
-#if DEBUG
-struct RecordingCompletedView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecordingCompletedView(voiceURL: URL(filePath: "a.m4a"))
-            .preferredColorScheme(.dark)
-            .environmentObject(Config.shared)
-        
+    init(voiceURL: URL, parentID: NSManagedObjectID? = nil) {
+        _vm = StateObject(wrappedValue: RecordingCompletedViewModel(voicePath: voiceURL, parentID: parentID))
+        _player = StateObject(wrappedValue: AudioPlayer(voiceURL))
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            HStack {
+                Text(JournalText.string("recording_complete")).font(.title2)
+                Spacer()
+                Button(role: .destructive) { discard = true } label: {
+                    Label(JournalText.string("discard_action"), systemImage: "trash")
+                        .labelStyle(.iconOnly).frame(width: 44, height: 44).contentShape(Rectangle())
+                }
+            }
+            HStack(spacing: 12) {
+                Button { player.isPlaying ? player.pause() : player.play() } label: {
+                    Label(JournalText.string(player.isPlaying ? "pause" : "play"), systemImage: player.isPlaying ? "pause.fill" : "play.fill")
+                        .labelStyle(.iconOnly).frame(width: 48, height: 48)
+                        .background(JournalTheme.soft, in: Circle())
+                }
+                Text(MemoEntity.durationLabel(vm.duration)).font(.subheadline).monospacedDigit()
+                Spacer()
+                if vm.isTranscribing { ProgressView(L(.transcribing)).font(.caption) }
+            }
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: $vm.content)
+                    .font(.body).lineSpacing(7).scrollContentBackground(.hidden)
+                    .disabled(vm.isTranscribing)
+                    .accessibilityLabel(JournalText.string("thought"))
+                if vm.content.isEmpty && !vm.isTranscribing {
+                    Text(JournalText.string("placeholder"))
+                        .font(.body).foregroundStyle(JournalTheme.secondary)
+                        .padding(.top, 8).padding(.leading, 5)
+                        .allowsHitTesting(false).accessibilityHidden(true)
+                }
+            }
+            if let error = vm.transcriptionError {
+                Text(error).font(.footnote).foregroundStyle(JournalTheme.secondary)
+                Button { vm.transcribe() } label: { Label(L(.try_again), systemImage: "arrow.clockwise") }
+            }
+            Button { hideKeyboard(); vm.save() } label: {
+                Text(L(.save)).frame(maxWidth: .infinity).frame(minHeight: 50)
+                    .foregroundStyle(.white).background(JournalTheme.record, in: Capsule())
+            }
+            .disabled(!vm.canBeSaved || vm.isTranscribing)
+            .accessibilityIdentifier("journal_save_recording")
+        }
+        .padding(24).foregroundStyle(JournalTheme.ink).background(JournalTheme.paper)
+        .buttonStyle(.plain)
+        .onChange(of: vm.saved) { saved in if saved { dismiss() } }
+        .task {
+            await vm.prepare()
+            if Config.shared.autoSave { vm.save() }
+            else { vm.transcribe() }
+        }
+        .onDisappear { vm.cancelTranscription(); player.stop() }
+        .alert(JournalText.string("error"), isPresented: Binding(get: { vm.saveError != nil }, set: { if !$0 { vm.saveError = nil } })) { } message: { Text(vm.saveError ?? "") }
+        .confirmationDialog(JournalText.string("discard"), isPresented: $discard, titleVisibility: .visible) {
+            Button(JournalText.string("discard_action"), role: .destructive) { vm.delete(); dismiss() }
+            Button(L(.cancel), role: .cancel) { }
+        }
     }
 }
-#endif

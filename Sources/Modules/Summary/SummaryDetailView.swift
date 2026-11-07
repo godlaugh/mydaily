@@ -83,6 +83,8 @@ struct SummaryDetailView: View {
         }
         .navigationBarTitleDisplayMode(.large)
         .navigationTitle(summary.viewTitle)
+        .toolbar(.visible, for: .navigationBar)
+        .background(JournalTheme.paper)
     }
     
     private func markdown() -> URL {

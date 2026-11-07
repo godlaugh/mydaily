@@ -10,6 +10,7 @@ import Foundation
 enum ActiveSheet: Identifiable, Equatable {
     case settings
     case quickMemo
+    case appendMemo(MemoEntity)
     /// Generate summary
     case summarize(SummaryItem)
     case micPermission
@@ -20,6 +21,7 @@ enum ActiveSheet: Identifiable, Equatable {
         switch self {
         case .settings: return "settings"
         case .quickMemo: return "quick"
+        case .appendMemo(let item): return "append_\(item.objectID.uriRepresentation().absoluteString)"
         case .summarize(let item): return item.id
         case .micPermission: return "mic"
         case .editMemo(let item): return "edit_memo_\(item.id ?? "")"
